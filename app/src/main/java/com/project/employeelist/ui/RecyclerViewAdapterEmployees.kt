@@ -5,17 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.project.employeelist.R
 import com.project.employeelist.databinding.ListItemEmployeeBinding
 import com.project.employeelist.model.Employee
 
-class RecyclerViewEmployees(
+class RecyclerViewAdapterEmployees constructor(
     private val context: Context?
-) : PagingDataAdapter<Employee, RecyclerViewEmployees.ViewHolder>(COMPARATOR) {
+) : ListAdapter<Employee, RecyclerViewAdapterEmployees.ViewHolder>(COMPARATOR) {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding: ListItemEmployeeBinding? = DataBindingUtil.bind(view)
@@ -28,6 +28,18 @@ class RecyclerViewEmployees(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
+        if (checkIfSomeFieldIsNull(item) && currentList.size > 1) submitList(listOf())
+
+        if (checkIfEveryFieldIsNull(item)){
+            holder.binding?.labelNoEmployee?.visibility = View.VISIBLE
+            holder.binding?.fullname?.visibility = View.INVISIBLE
+            holder.binding?.email?.visibility = View.INVISIBLE
+            holder.binding?.phoneNumber?.visibility = View.INVISIBLE
+            holder.binding?.team?.visibility = View.INVISIBLE
+            holder.binding?.employeeImage?.visibility = View.INVISIBLE
+            holder.binding?.shift?.visibility = View.INVISIBLE
+            return
+        }
         holder.binding?.fullname?.text = item?.fullName
         holder.binding?.email?.text = item?.emailAddress
         holder.binding?.phoneNumber?.text = item?.phoneNumber
@@ -41,6 +53,29 @@ class RecyclerViewEmployees(
         holder.binding?.employeeImage?.let { imageView ->
             Glide.with(context!!).load(item?.photoUrlSmall).into(imageView)
         }
+    }
+
+    private fun checkIfEveryFieldIsNull(item: Employee?): Boolean{
+        return item?.employeeType == null &&
+        item?.uuid == null &&
+        item?.emailAddress == null &&
+        item?.fullName == null &&
+        item?.biography == null &&
+        item?.phoneNumber == null &&
+        item?.photoUrlLarge == null &&
+        item?.photoUrlSmall == null &&
+        item?.team == null
+    }
+    private fun checkIfSomeFieldIsNull(item: Employee?): Boolean{
+        return item?.employeeType == null ||
+                item.uuid == null ||
+                item.emailAddress == null ||
+                item.fullName == null ||
+                item.biography == null ||
+                item.phoneNumber == null ||
+                item.photoUrlLarge == null ||
+                item.photoUrlSmall == null ||
+                item.team == null
     }
 
     companion object {

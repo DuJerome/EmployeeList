@@ -3,7 +3,7 @@ package com.project.employeelist.model
 import com.google.gson.annotations.SerializedName
 
 data class Data(
-    @SerializedName("employees") var employees: ArrayList<Employee> = arrayListOf()
+    @SerializedName("employees") var employees: MutableList<Employee> = mutableListOf()
 )
 
 data class Employee(
