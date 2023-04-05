@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.project.employeelist.R
 import com.project.employeelist.databinding.ListItemEmployeeBinding
-import com.project.employeelist.model.Employees
+import com.project.employeelist.model.Employee
 
 class RecyclerViewEmployees(
     private val context: Context?
-): PagingDataAdapter<Employees, RecyclerViewEmployees.ViewHolder>(COMPARATOR) {
+) : PagingDataAdapter<Employee, RecyclerViewEmployees.ViewHolder>(COMPARATOR) {
 
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding: ListItemEmployeeBinding? = DataBindingUtil.bind(view)
     }
 
@@ -32,20 +32,24 @@ class RecyclerViewEmployees(
         holder.binding?.email?.text = item?.emailAddress
         holder.binding?.phoneNumber?.text = item?.phoneNumber
         holder.binding?.team?.text = item?.team
-        holder.binding?.shift?.text = item?.employeeType
+        holder.binding?.shift?.text = when (item?.employeeType) {
+            "FULL_TIME" -> "Full Time"
+            "PART_TIME" -> "Part Time"
+            "CONTRACTOR" -> "Contractor"
+            else -> "Unknown"
+        }
         holder.binding?.employeeImage?.let { imageView ->
-            Glide.with(context!!)
-                .load(item?.photoUrlSmall)
-                .into(imageView)
+            Glide.with(context!!).load(item?.photoUrlSmall).into(imageView)
         }
     }
+
     companion object {
-        private val COMPARATOR = object : DiffUtil.ItemCallback<Employees>() {
-            override fun areItemsTheSame(oldItem: Employees, newItem: Employees): Boolean {
+        private val COMPARATOR = object : DiffUtil.ItemCallback<Employee>() {
+            override fun areItemsTheSame(oldItem: Employee, newItem: Employee): Boolean {
                 return oldItem == newItem
             }
 
-            override fun areContentsTheSame(oldItem: Employees, newItem: Employees): Boolean {
+            override fun areContentsTheSame(oldItem: Employee, newItem: Employee): Boolean {
                 return oldItem.uuid == newItem.uuid
             }
         }

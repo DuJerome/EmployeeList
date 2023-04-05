@@ -3,10 +3,10 @@ package com.project.employeelist.model
 import com.google.gson.annotations.SerializedName
 
 data class Data(
-    @SerializedName("employees") var employees: ArrayList<Employees> = arrayListOf()
+    @SerializedName("employees") var employees: ArrayList<Employee> = arrayListOf()
 )
 
-data class Employees(
+data class Employee(
     @SerializedName("uuid") var uuid: String? = null,
     @SerializedName("full_name") var fullName: String? = null,
     @SerializedName("phone_number") var phoneNumber: String? = null,
